@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Rekod Pembayaran & Resit</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>App Rekod Pembayaran & Resit</h1>
+        
+        <form id="paymentForm">
+            <!-- Payer Information Section -->
+            <div class="form-group">
+                <label for="payerName">Bayaran Diterima Dari:</label>
+                <input type="text" id="payerName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="receivedBy">Bayaran Diterima Oleh:</label>
+                <input type="text" id="receivedBy" required>
+            </div>
+
+            <div class="form-group">
+                <label for="transactionDate">Tarikh Transaksi:</label>
+                <input type="date" id="transactionDate" required>
+            </div>
+
+            <!-- Payment Items Section -->
+            <h3>SENARAI PEMBAYARAN:</h3>
+            <div id="paymentList">
+                <!-- Initial Payment Item -->
+                <div class="paymentItem">
+                    <input type="text" class="itemName" placeholder="Nama Item" required>
+                    <input type="number" class="itemAmount" placeholder="Jumlah (RM)" required>
+                    <button type="button" class="removeItem">X</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <button type="button" id="addPayment">Tambah Pembayaran</button>
+
+            <!-- Total Amount -->
+            <div class="form-group total-group">
+                <label for="totalAmount">Jumlah Pembayaran (RM):</label>
+                <input type="number" id="totalAmount" readonly>
+            </div>
+
+            <!-- PDF Generation Buttons -->
+            <div class="button-group">
+                <button type="button" id="generateReport">Jana Laporan PDF</button>
+                <button type="button" id="generateReceipt">Jana Resit PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>© App Rekod Pembayaran & Resit 2025 by Mohamad Adri bin Maili, SK Stalon</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
