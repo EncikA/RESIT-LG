@@ -2,10 +2,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const { jsPDF } = window.jspdf;
 
     // DOM Elements
-    const paymentForm = document.getElementById("paymentForm");
     const addPaymentButton = document.getElementById("addPayment");
     const paymentList = document.getElementById("paymentList");
     const totalAmountField = document.getElementById("totalAmount");
+    const generateReportButton = document.getElementById("generateReport");
+    const generateReceiptButton = document.getElementById("generateReceipt");
+
+    // Ensure buttons exist before adding event listeners
+    if (!addPaymentButton || !generateReportButton || !generateReceiptButton) {
+        console.error("One or more buttons are missing!");
+        return;
+    }
 
     // Function to add a new payment item
     function addPaymentItem() {
@@ -17,12 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
             <button type="button" class="removeItem">X</button>
         `;
 
+        // Append to payment list
         paymentList.appendChild(paymentItem);
-        
-        // Update total when a new amount is entered
-        paymentItem.querySelector(".itemAmount").addEventListener("input", updateTotal);
 
-        // Remove item event listener
+        // Attach event listeners
+        paymentItem.querySelector(".itemAmount").addEventListener("input", updateTotal);
         paymentItem.querySelector(".removeItem").addEventListener("click", () => {
             paymentItem.remove();
             updateTotal();
@@ -31,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateTotal();
     }
 
-    // Event Listener for Add Payment Button
+    // Event Listener for "Tambah Pembayaran"
     addPaymentButton.addEventListener("click", addPaymentItem);
 
     // Function to update total amount
@@ -43,11 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
         totalAmountField.value = total.toFixed(2);
     }
 
-    // Listen for changes in amount fields
-    paymentList.addEventListener("input", updateTotal);
-
     // Function to generate PDF (Laporan or Resit)
     function generatePDF(type) {
+        if (!window.jsPDF) {
+            console.error("jsPDF not loaded!");
+            return;
+        }
+
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -86,12 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         doc.text("Bayaran Diterima Dari:", 25, y);
         doc.setFont("helvetica", "bold");
-        doc.text(document.getElementById("payerName").value || "N/A", 25, y + 8);
+        doc.text(document.getElementById("payerName")?.value || "N/A", 25, y + 8);
 
         doc.setFont("helvetica", "normal");
         doc.text("Tarikh Transaksi:", pageWidth - 65, y);
         doc.setFont("helvetica", "bold");
-        const transactionDate = document.getElementById("transactionDate").value;
+        const transactionDate = document.getElementById("transactionDate")?.value;
         doc.text(transactionDate ? transactionDate.split("-").reverse().join("/") : "N/A", pageWidth - 65, y + 8);
 
         y += 30;
@@ -138,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.setTextColor(0);
         doc.text("Tandatangan Penerima:", 25, y);
         doc.line(25, y + 5, 80, y + 5);
-        doc.text("Nama: " + (document.getElementById("receivedBy").value || "N/A"), 25, y + 10);
+        doc.text("Nama: " + (document.getElementById("receivedBy")?.value || "N/A"), 25, y + 10);
 
         // Security Stamp
         doc.setFontSize(40);
@@ -155,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.save(`${type}_SK_STALON_${new Date().getTime()}.pdf`);
     }
 
-    // Generate Report and Receipt
-    document.getElementById("generateReport").addEventListener("click", () => generatePDF("Laporan"));
-    document.getElementById("generateReceipt").addEventListener("click", () => generatePDF("Resit"));
+    // Ensure buttons exist before adding event listeners
+    generateReportButton.addEventListener("click", () => generatePDF("Laporan"));
+    generateReceiptButton.addEventListener("click", () => generatePDF("Resit"));
 });
